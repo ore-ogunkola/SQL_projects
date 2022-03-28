@@ -1,0 +1,33 @@
+insert into science_class (enrollment_no,name,science_marks)
+values (1,'Popeye',33),
+(2,'Olive',54),
+(3,'Brutus',98);
+
+copy science_class from 'C:\Program Files\PostgreSQL\13\data\Student.csv' delimiter ',' csv header;
+
+select * from science_class;
+
+select name from science_class
+where science_marks > 60;
+
+select * from science_class
+where science_marks >35 
+and science_marks <60;
+
+select * from science_class
+where science_marks <= 35
+or science_marks >= 60;
+
+update science_class 
+set science_marks = 45 
+where name ='Popeye';
+
+select * from science_class;
+
+delete from science_class
+where name = 'Robb';
+
+alter table  science_class
+
+
+rename column name to student_name;

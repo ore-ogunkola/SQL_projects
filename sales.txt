@@ -1,0 +1,81 @@
+select * 
+from customer
+where city in('Philadelphia','Seattle');
+
+select *
+from customer
+where age between 25 and 45;
+
+select *
+from customer 
+where customer_name like 'O%';
+
+select * 
+from customer
+where customer_name like '____ %';
+
+
+select distinct city,region
+from customer
+where region in ('North','East');
+
+select *
+from sales
+where sales between 100 and 500;
+
+select *
+from customer
+where customer_name like '% ____';
+
+select *
+from sales
+where discount > 0
+order by discount desc
+limit 10;
+
+
+select sum(sales) as "Total Sales"
+from sales;
+
+select count(customer_id)
+from customer 
+where region in ('North') and age between 20 and 20;
+
+select avg(age)
+from customer
+where region in('East');
+
+select min(age), max(age)
+from customer 
+where city in ('Philadelphia');
+
+select * from sales;
+
+select sum(sales) as "total sales", 
+sum(quantity) as "total sales quantity",
+count(order_id) as "no of orders",
+max(sales) as "min sales value",
+min(sales) as "max sales value",
+avg(sales) as "average sales value"
+from sales
+group by product_id;
+
+
+select product_id 
+from sales
+where quantity>10;
+
+select product_id , sum(quantity) as total_quantity from sales group by product_id
+having sum(quantity) > 10;
+
+select 
+a.order_line,
+a.product_id,
+a.customer_id,
+a.sales,
+b.customer_name,
+b.age
+from sales as a
+inner join customer as b
+on a.customer_id = b.customer_id
+order by customer_id; 

@@ -1,0 +1,281 @@
+select * from customer;
+select * from product;
+select * from sales;
+
+
+select * from customer
+where city in ('Philadelphia','Seattle');
+
+select * from customer
+where city = 'Philadelphia' or city = 'Seattle';
+
+/*between*/
+
+select * from customer where age between  20 and 30;
+
+select * from customer where age >=20 and age <=30;
+
+select * from customer where age not between 20 and 30;
+
+select * from sales
+where ship_date between '2015-04-01' and '2016-04-01';
+
+select * from customer
+where customer_name like 'J%';
+
+select * from customer
+where customer_name like '%Nelson%';
+
+select * from customer
+where customer_name like '____ %';
+
+select distinct city from customer
+where city not like 'S%';
+
+select * from customer
+where customer_name like 'G\%';
+
+select * from customer;
+
+select distinct city,region from customer
+where region in ('North','East');
+
+select * from sales;
+
+alter table sales
+rename column sales_amount to sales;
+
+select * from sales 
+where sales_amount between 100 and 500;
+
+select customer_name from customer
+where customer_name like '% ____';
+
+--single line comments
+
+/* multi
+line command*/
+
+select * from customer
+where state ='California'
+order by customer_name;
+
+select * from customer
+where state ='California'
+order by customer_name asc;
+
+select * from customer order by 2 desc;
+
+select * from customer
+where age > 25
+order by city asc,customer_name desc;
+
+select * from customer 
+order by age desc;
+
+select * from customer
+where age>=25
+order by age desc
+limit 8;
+
+select * from customer
+where age>25
+order by age asc
+limit 10;
+
+select * from sales
+where discount > 0
+order by discount desc;
+
+select * from sales
+where discount > 0
+order by discount desc
+limit 10;
+
+select customer_id as "Serial Number", customer_name as name, age as customer_age from customer;
+
+select count(*) from sales;
+
+select * from sales;
+
+select count(order_line) as "Number of Products Ordered",
+count(distinct order_id) as "Number of orders"
+from sales where customer_id = 'CG-12520';
+
+select sum(profit) as "Total profit"
+from sales;
+
+select sum(quantity) as "Total Quantity"
+from sales where product_id ='FUR-TA-10000577';
+
+select avg(age) as "average customer age"
+from customer;
+
+select avg(sales *.10) as "average commission value"
+from sales;
+
+select min(sales)as "minimum sales value june 15"
+from sales
+where order_date between '2015-06-01' and '2015-06-30';
+
+select sales
+from sales
+where order_date between '2015-06-01' and '2015-06-30'
+order by sales asc;
+
+select max(sales)as "maximum sales value june 15"
+from sales
+where order_date between '2015-06-01' and '2015-06-30';
+
+select * from customer;
+
+select sum(sales) as "total sales"
+from sales;
+
+select count(distinct customer_id) as "No of Northern Customers"
+from customer
+where region = 'North' and age between 20 and 30;
+
+select avg(age) as "average age of customers in the east"
+from customer
+where region = 'East';
+
+select min(age) as "minimum age in Philadelphia"
+from customer
+where city ='Philadelphia';
+
+select max(age) as "maximum age in Philadelphia"
+from customer
+where city ='Philadelphia';
+
+select age from customer
+where city ='Philadelphia';
+
+select * from customer;
+
+select region,state,count(customer_id)as "customer count by regions"
+from customer
+group by region,state;
+
+select product_id,sum(quantity) as quantity_sold from sales
+group by product_id 
+order by quantity_sold desc;
+
+select * from sales;
+
+select customer_id,
+min(sales) as min_sales,
+max(sales) as max_sales,
+avg(sales) as average_sales,
+sum(sales) as total_sales
+from sales
+group by customer_id
+order by total_sales desc
+limit 5;
+
+select region,count(customer_id) as customer_count
+from customer
+group by region
+having count(customer_id)>200;
+
+select region,count(customer_id)as customer_count
+from customer 
+where customer_name like 'A%'
+group by region
+having count(customer_id)>15;
+
+select product_id,
+sum(sales) as total_sales,
+sum(quantity) as total_quantity,
+count(order_line) as no_of_orders,
+max(sales) as max_sales,
+min(sales) as min_sales,
+avg(sales) as average_sales
+from sales
+group by product_id;
+
+select product_id,
+sum(sales) as total_sales,
+sum(quantity) as total_quantity,
+count(order_line) as no_of_orders,
+max(sales) as max_sales,
+min(sales) as min_sales,
+avg(sales) as average_sales
+from sales
+group by product_id
+having sum(quantity) > 10
+order by total_sales desc;
+
+select *,case
+when age<30 then 'young'
+when age>60 then 'senior citizen'
+else 'middle aged'
+end as age_category from customer;
+
+--creating sales table of 2015 year
+
+create table sales_2015 as select * 
+from sales 
+where ship_date between '2015-01-01' and '2015-12-31';
+select count(*) from sales_2015; --2131
+select count(distinct customer_id) from sales_2015; --578
+
+create table customer_20_60
+as select * from customer where age between 20 and 60;
+select count(*)
+from customer_20_60; --597
+
+select customer_id from sales_2015 order by customer_id;
+select customer_id from customer_20_60 order by customer_id;
+
+select 
+a.order_line,
+a.product_id,
+a.customer_id,
+a.sales,
+b.customer_name,
+b.age
+from sales_2015 as a
+inner join customer_20_60 as b
+on a.customer_id = b.customer_id
+order by customer_id;
+
+select 
+a.order_line,
+a.product_id,
+a.customer_id,
+a.sales,
+b.customer_name,
+b.age
+from sales_2015 as a
+left join customer_20_60 as b
+on a.customer_id = b.customer_id
+order by customer_id;
+
+
+select 
+a.order_line,
+a.product_id,
+a.customer_id,
+a.sales,
+b.customer_name,
+b.age
+from sales_2015 as a
+right join customer_20_60 as b
+on a.customer_id = b.customer_id
+order by customer_id;
+
+select 
+a.order_line,
+a.product_id,
+a.customer_id,
+a.sales,
+b.customer_name,
+b.age
+from sales_2015 as a
+full join customer_20_60 as b
+on a.customer_id = b.customer_id
+order by a.customer_id, b.customer_id;
+
+select a.,b.
+from year_values as
